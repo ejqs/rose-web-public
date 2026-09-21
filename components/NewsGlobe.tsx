@@ -51,8 +51,8 @@ export default function NewsGlobe({ tones }: Props) {
     const g = globeRef.current;
     if (!g) return;
     g.controls().autoRotate = true;
-    g.controls().autoRotateSpeed = 0.35;
-    g.pointOfView({ lat: 20, lng: 20, altitude: 2.15 }, 0);
+    g.controls().autoRotateSpeed = 0.6;
+    g.pointOfView({ lat: 48, lng: 32, altitude: 2.2 }, 0);
   }, [size.w, countries.length]);
 
   const polygons = useMemo(
@@ -65,7 +65,7 @@ export default function NewsGlobe({ tones }: Props) {
       const feat = obj as GeoFeature;
       const iso = featureIso(feat.properties);
       const row = iso ? byIso.get(iso) : undefined;
-      if (!row) return "rgba(80, 80, 80, 0.12)";
+      if (!row) return "rgba(120, 120, 120, 0.35)";
       return capColor(row.tone, row.strength);
     },
     [byIso],
@@ -77,8 +77,8 @@ export default function NewsGlobe({ tones }: Props) {
       if (feat === hover) return 0.08;
       const iso = featureIso(feat.properties);
       const row = iso ? byIso.get(iso) : undefined;
-      if (!row) return 0.003;
-      return 0.012 + 0.05 * row.strength;
+      if (!row) return 0.006;
+      return 0.03 + 0.08 * row.strength;
     },
     [byIso, hover],
   );
@@ -105,7 +105,7 @@ export default function NewsGlobe({ tones }: Props) {
           width={size.w}
           height={size.h}
           backgroundColor="#111111"
-          globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg"
+          globeImageUrl="/data/earth-dark.jpg"
           polygonsData={polygons}
           polygonCapColor={cap}
           polygonSideColor={() => "rgba(0, 0, 0, 0.12)"}

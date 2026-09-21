@@ -34,7 +34,7 @@ function signedSentiment(sentiment: string, confidence: number) {
 export function aggregateCountryTones(rows: ArticleToneRow[]): CountryTone[] {
   const map = new Map<string, { name: string; n: number; confSum: number; net: number }>();
   for (const row of rows) {
-    if (!row.countryIso || row.eligible !== 1) continue;
+    if (!row.countryIso || Number(row.eligible) !== 1) continue;
     const iso = row.countryIso.toUpperCase();
     const conf = Number(row.confidence) || 0;
     const cur = map.get(iso) || {
@@ -68,10 +68,10 @@ export function aggregateCountryTones(rows: ArticleToneRow[]): CountryTone[] {
 }
 
 export function capColor(tone: Tone, strength: number) {
-  const a = 0.28 + 0.62 * (Number(strength) || 0);
-  if (tone === "positive") return `rgba(22, 145, 72, ${a})`;
-  if (tone === "negative") return `rgba(186, 36, 36, ${a})`;
-  return `rgba(36, 96, 186, ${a})`;
+  const a = 0.55 + 0.4 * (Number(strength) || 0);
+  if (tone === "positive") return `rgba(46, 196, 92, ${a})`;
+  if (tone === "negative") return `rgba(220, 50, 50, ${a})`;
+  return `rgba(56, 120, 220, ${a})`;
 }
 
 export function featureIso(properties: {

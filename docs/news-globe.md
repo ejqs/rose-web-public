@@ -13,6 +13,8 @@ The homepage globe is the public surface for Jev country + sentiment. No extra c
 | `/` | Globe + latest articles |
 | `components/NewsGlobe.tsx` | Client WebGL globe (`ssr: false` via `NewsGlobeClient`) |
 | `public/data/ne_110m_admin_0_countries.geojson` | Natural Earth 110m polygons (ISO_A2; FRA/NOR fall back from ADM0_A3) |
+| `public/data/earth-dark.jpg` | Local globe texture (avoids CDN CORS) |
+| `GET /api/globe` | JSON of aggregated country tones |
 | `lib/globe-data.ts` | Reads `article_geo_sentiment` |
 | `lib/globe-tone.ts` | Aggregation + colors (same formula as rose-bot `globe-aggregate.js`) |
 
@@ -25,10 +27,10 @@ rose-bot writes one `article_geo_sentiment` row per article after Jev. This app 
 Per country, over eligible recent analyses:
 
 - `net` = Σ (+confidence if Jev said positive, −confidence if negative, 0 if mixed)
-- **Green** `rgba(22, 145, 72, α)` when `net > 0.35`
-- **Red** `rgba(186, 36, 36, α)` when `net < -0.35`
-- **Blue** `rgba(36, 96, 186, α)` otherwise (mixed / not enough signal)
-- **α / height** scale with how many articles agree and their mean confidence: `(n / max_n) * (0.35 + 0.65 * mean_confidence)`, clamped 0.22–1
+- **Green** `rgba(46, 196, 92, α)` when `net > 0.35`
+- **Red** `rgba(220, 50, 50, α)` when `net < -0.35`
+- **Blue** `rgba(56, 120, 220, α)` otherwise (mixed / not enough signal)
+- **α / height** scale with how many articles agree and their mean confidence: `(n / max_n) * (0.35 + 0.65 * mean_confidence)`, clamped 0.22–1. Display α is `0.55 + 0.4 * strength`.
 
 Countries with no eligible article stay a faint gray.
 

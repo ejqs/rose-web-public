@@ -115,13 +115,13 @@ h1 {
 }
 
 .swatch-pos {
-  background: rgb(22, 145, 72);
+  background: rgb(46, 196, 92);
 }
 
 .swatch-neg {
-  background: rgb(186, 36, 36);
+  background: rgb(220, 50, 50);
 }
 
 .swatch-neu {
-  background: rgb(36, 96, 186);
+  background: rgb(56, 120, 220);
 }

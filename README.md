@@ -21,6 +21,7 @@ npm run dev
 | --- | --- |
 | `/` | Globe + latest articles |
 | `/articles/[id]` | Excerpt + outbound link |
+| `GET /api/globe` | Aggregated country tones (JSON) |
 | `GET /health` | Railway probe |
 
 ```bash
