@@ -14,13 +14,13 @@ The homepage globe is the public surface for Jev country + sentiment. No extra c
 | `components/NewsGlobe.tsx` | Client WebGL globe (`ssr: false` via `NewsGlobeClient`) |
 | `public/data/ne_110m_admin_0_countries.geojson` | Natural Earth 110m polygons (ISO_A2; FRA/NOR fall back from ADM0_A3) |
 | `public/data/earth-dark.jpg` | Local globe texture (avoids CDN CORS) |
-| `GET /api/globe` | JSON of aggregated country tones |
-| `lib/globe-data.ts` | Reads `article_geo_sentiment` |
-| `lib/globe-tone.ts` | Aggregation + colors (same formula as rose-bot `globe-aggregate.js`) |
+| `GET /api/globe` | Proxies rose-backend `GET /v1/globe` |
+| `lib/globe-data.ts` | HTTP client for globe tones |
+| `lib/globe-tone.ts` | Colors (same formula as rose-backend / rose-bot) |
 
 ## Data
 
-rose-bot writes one `article_geo_sentiment` row per article after Jev. This app only **reads** Postgres (`DATABASE_URL`). If the table is missing (bot not migrated yet), the globe renders with uncolored countries.
+rose-backend aggregates `article_geo_sentiment` (written by rose-bot after Jev). This app only **reads REST** (`ROSE_BACKEND_URL`). If the backend is down, the globe renders with uncolored countries.
 
 ## Color rules
 
@@ -41,4 +41,4 @@ Jev is conservative: datelines and bylines are not enough to assign a country. S
 1. rose-bot scrapes an article (unchanged).
 2. After the tick, `jevGlobeTick` sends title+body to Jev (`jev-latest` / mock fixtures).
 3. Gated country + sentiment is stored.
-4. This page is `force-dynamic`; a refresh reads the new row and recolors the polygon.
+4. This page is `force-dynamic`; a refresh reads `/v1/globe` and recolors the polygon.

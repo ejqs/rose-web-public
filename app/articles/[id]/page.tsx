@@ -1,9 +1,7 @@
-import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDb } from "@/lib/db";
-import { articles, newsSources } from "@/lib/schema";
-import { excerpt, formatDate } from "@/lib/text";
+import { backendJson, type PublicArticle } from "@/lib/backend";
+import { formatDate } from "@/lib/text";
 
 export const dynamic = "force-dynamic";
 
@@ -16,22 +14,13 @@ export default async function ArticlePage({
   const num = Number(id);
   if (!Number.isInteger(num) || num < 1) notFound();
 
-  const rows = await getDb()
-    .select({
-      id: articles.id,
-      title: articles.title,
-      url: articles.url,
-      publishedAt: articles.publishedAt,
-      scrapedAt: articles.scrapedAt,
-      bodyText: articles.bodyText,
-      source: newsSources.name,
-    })
-    .from(articles)
-    .innerJoin(newsSources, eq(articles.sourceId, newsSources.id))
-    .where(eq(articles.id, num))
-    .limit(1);
-
-  const row = rows[0];
+  let row: PublicArticle | undefined;
+  try {
+    const data = await backendJson<{ article?: PublicArticle }>(`/v1/articles/${num}`);
+    row = data.article;
+  } catch {
+    notFound();
+  }
   if (!row) notFound();
 
   return (
@@ -42,11 +31,11 @@ export default async function ArticlePage({
       <h1>{row.title}</h1>
       <p className="meta">
         {row.source}
-        {row.publishedAt || row.scrapedAt
-          ? ` · ${formatDate(row.publishedAt || row.scrapedAt)}`
+        {row.published_at || row.scraped_at
+          ? ` · ${formatDate(row.published_at || row.scraped_at)}`
           : ""}
       </p>
-      <p className="excerpt">{excerpt(row.bodyText, 400)}</p>
+      <p className="excerpt">{row.excerpt}</p>
       <p>
         <a href={row.url} rel="noopener noreferrer">
           Read on {row.source} ↗
