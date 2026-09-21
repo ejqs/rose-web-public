@@ -13,10 +13,11 @@ export function getDb() {
     if (!url) {
       throw new Error("DATABASE_URL is required (Postgres).");
     }
+    const local = /localhost|127\.0\.0\.1/i.test(url) || process.env.DATABASE_SSL === "0";
     globalForDb.rosePool = new Pool({
       connectionString: url,
       max: 3,
-      ssl: { rejectUnauthorized: false },
+      ssl: local ? false : { rejectUnauthorized: false },
     });
     globalForDb.roseDb = drizzle(globalForDb.rosePool, { schema });
   }
