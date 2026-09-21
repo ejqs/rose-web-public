@@ -1,4 +1,4 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, pgTable, text } from "drizzle-orm/pg-core";
 
 export const newsSources = pgTable("news_sources", {
   id: integer("id").generatedByDefaultAsIdentity().primaryKey(),
@@ -37,4 +37,35 @@ export const articles = pgTable("articles", {
   jevStatus: text("jev_status").notNull().default("skipped"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
+});
+
+export const jevAnalyses = pgTable("jev_analyses", {
+  id: integer("id").generatedByDefaultAsIdentity().primaryKey(),
+  articleId: integer("article_id")
+    .notNull()
+    .references(() => articles.id),
+  entityKey: text("entity_key"),
+  claimSpan: text("claim_span"),
+  scope: text("scope").notNull(),
+  taxonomyVersion: text("taxonomy_version").notNull(),
+  model: text("model").notNull(),
+  answers: text("answers").notNull(),
+  inputTokenEstimate: integer("input_token_estimate"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const articleGeoSentiment = pgTable("article_geo_sentiment", {
+  articleId: integer("article_id")
+    .primaryKey()
+    .references(() => articles.id),
+  countryIso: text("country_iso"),
+  countryName: text("country_name"),
+  region: text("region"),
+  sentiment: text("sentiment").notNull(),
+  confidence: doublePrecision("confidence"),
+  aboutCountry: doublePrecision("about_country"),
+  eligible: integer("eligible").notNull().default(0),
+  taxonomyVersion: text("taxonomy_version").notNull(),
+  model: text("model").notNull(),
+  analyzedAt: text("analyzed_at").notNull(),
 });

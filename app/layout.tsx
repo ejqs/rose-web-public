@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Rose",
-  description: "Recursive Opinionated Search Engine — scraped news, structured later.",
+  description: "Recursive Opinionated Search Engine — news globe by country sentiment.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
